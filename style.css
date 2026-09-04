@@ -1,0 +1,726 @@
+/* =========================================
+   BASIS
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #080909;
+    color: #f4f4f0;
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 5%;
+
+    background: rgba(8, 9, 9, 0.75);
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #9ee493;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    font-size: 13px;
+    color: #aaa;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+.theme-button {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+    border: 1px solid #333;
+
+    background: #111;
+    color: white;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    padding: 120px 8% 80px;
+
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+}
+
+#heroCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+
+    max-width: 850px;
+}
+
+.eyebrow,
+.section-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #9ee493;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: clamp(60px, 10vw, 150px);
+    line-height: 0.88;
+    letter-spacing: -6px;
+    font-weight: 800;
+}
+
+.hero h1 span {
+    color: #9ee493;
+}
+
+.hero-subtitle {
+    font-size: 30px;
+    margin-top: 30px;
+    font-weight: 300;
+}
+
+.hero-description {
+    max-width: 600px;
+    color: #aaa;
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+.cta {
+    display: inline-flex;
+    gap: 30px;
+    align-items: center;
+
+    margin-top: 40px;
+    padding: 16px 22px;
+
+    background: #f4f4f0;
+    color: #080909;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+}
+
+.cta:hover {
+    transform: translateY(-4px);
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    right: 8%;
+
+    color: #777;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.section {
+    padding: 140px 8%;
+}
+
+.section h2 {
+    font-size: clamp(45px, 6vw, 90px);
+    line-height: 0.95;
+    letter-spacing: -3px;
+}
+
+.section h2 span {
+    color: #9ee493;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.intro {
+    border-top: 1px solid #222;
+}
+
+.intro-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 100px;
+}
+
+.intro-grid p {
+    color: #aaa;
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   KPI
+========================================= */
+
+.kpi-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+}
+
+.kpi-card {
+    padding: 60px 8%;
+    border-right: 1px solid #222;
+}
+
+.kpi-label {
+    font-size: 11px;
+    color: #777;
+    letter-spacing: 2px;
+}
+
+.kpi-number {
+    font-size: clamp(50px, 6vw, 90px);
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.kpi-description {
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TIMELINE
+========================================= */
+
+.timeline-section {
+    background: #0d0f0e;
+}
+
+.timeline {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 80px;
+
+    border-bottom: 1px solid #333;
+}
+
+.timeline-year {
+    padding: 20px 10px;
+
+    background: transparent;
+    border: none;
+
+    color: #555;
+
+    font-size: 18px;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.timeline-year:hover,
+.timeline-year.active {
+    color: #9ee493;
+}
+
+.timeline-card {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+
+    margin-top: 70px;
+
+    padding: 50px;
+
+    border: 1px solid #292929;
+    background: #111312;
+}
+
+.timeline-big-year {
+    font-size: 100px;
+    font-weight: 800;
+    color: #9ee493;
+}
+
+.timeline-info h3 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.timeline-info p {
+    color: #999;
+    max-width: 600px;
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard-header {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 80px;
+
+    margin-bottom: 70px;
+}
+
+.dashboard-header > p {
+    color: #999;
+    max-width: 400px;
+}
+
+.chart-card {
+    padding: 40px;
+
+    border: 1px solid #292929;
+    background: #0e100f;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 40px;
+}
+
+.chart-header h3 {
+    font-size: 22px;
+}
+
+.chart-header p {
+    color: #666;
+    font-size: 13px;
+}
+
+.chart-badge {
+    padding: 8px 12px;
+
+    border: 1px solid #333;
+
+    font-size: 11px;
+    color: #9ee493;
+}
+
+.chart-container {
+    height: 400px;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    margin-top: 20px;
+}
+
+.data-card {
+    padding: 30px;
+    background: #111312;
+    border: 1px solid #222;
+}
+
+.data-card span {
+    color: #777;
+    font-size: 12px;
+}
+
+.data-card strong {
+    display: block;
+    font-size: 40px;
+    margin: 10px 0;
+}
+
+.data-card p {
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   OORZAKEN
+========================================= */
+
+.causes-section {
+    background: #0d0f0e;
+}
+
+.section-intro {
+    color: #999;
+    max-width: 550px;
+    margin-top: 30px;
+}
+
+.cause-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+
+    margin-top: 70px;
+}
+
+.cause-card {
+    min-height: 300px;
+
+    padding: 30px;
+
+    text-align: left;
+
+    border: 1px solid #292929;
+
+    background: #111312;
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.cause-card:hover {
+    transform: translateY(-8px);
+    border-color: #9ee493;
+}
+
+.cause-number {
+    color: #9ee493;
+    font-size: 12px;
+}
+
+.cause-card h3 {
+    font-size: 30px;
+    margin: 80px 0 15px;
+}
+
+.cause-card p {
+    color: #888;
+}
+
+
+/* =========================================
+   GEVOLGEN
+========================================= */
+
+.scenario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+
+    margin-top: 80px;
+
+    padding: 50px;
+
+    background: #101211;
+    border: 1px solid #292929;
+}
+
+.scenario-label {
+    color: #9ee493;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.scenario h3 {
+    font-size: 32px;
+    margin: 20px 0;
+}
+
+.scenario p {
+    color: #999;
+}
+
+.population-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    justify-content: center;
+    height: 100%;
+}
+
+.population-bar span {
+    display: block;
+    margin-bottom: 8px;
+    color: #888;
+}
+
+.population-bar div {
+    height: 25px;
+    background: #9ee493;
+
+    transition: width 1s ease;
+}
+
+
+/* =========================================
+   ENQUETE
+========================================= */
+
+.survey-placeholder {
+    margin-top: 70px;
+
+    padding: 80px;
+
+    text-align: center;
+
+    border: 1px dashed #333;
+}
+
+.survey-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #9ee493;
+    color: #080909;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.survey-placeholder h3 {
+    font-size: 25px;
+    margin: 25px 0 10px;
+}
+
+.survey-placeholder p {
+    color: #777;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    padding: 80px 8% 30px;
+
+    border-top: 1px solid #222;
+}
+
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-main p {
+    color: #666;
+    margin-top: 10px;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-links h4 {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #777;
+    font-size: 13px;
+}
+
+.footer-links a:hover {
+    color: #9ee493;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 70px;
+    padding-top: 20px;
+
+    border-top: 1px solid #222;
+
+    color: #555;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .hero {
+        padding-left: 6%;
+        padding-right: 6%;
+    }
+
+    .section {
+        padding: 90px 6%;
+    }
+
+    .intro-grid,
+    .dashboard-header,
+    .scenario {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .kpi-section {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-card {
+        border-right: none;
+        border-bottom: 1px solid #222;
+    }
+
+    .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cause-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .timeline-card {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-big-year {
+        font-size: 70px;
+        margin-bottom: 30px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .hero-subtitle {
+        font-size: 22px;
+    }
+
+    .timeline {
+        overflow-x: auto;
+        gap: 25px;
+    }
+
+    .timeline-year {
+        flex-shrink: 0;
+    }
+
+    .data-grid,
+    .cause-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card {
+        padding: 20px;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .scenario {
+        padding: 25px;
+    }
+
+    .survey-placeholder {
+        padding: 50px 25px;
+    }
+
+    .footer-main,
+    .footer-bottom {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
