@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Presentatie — Fertiliteit in Nederland</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#080909;--panel:#111312;--border:#292929;--accent:#9ee493;--text:#f4f4f0;--muted:#888;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -61,7 +62,10 @@ h2.big{font-size:clamp(32px,4.5vw,58px);line-height:1.05;letter-spacing:-1px;mar
 .poll-sub{color:#777;margin-bottom:40px;}
 .poll-options{display:flex;flex-direction:column;gap:14px;max-width:520px;margin:0 auto;}
 .poll-option{position:relative;overflow:hidden;padding:18px 25px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:17px;cursor:pointer;text-align:left;transition:.3s;display:flex;align-items:center;gap:15px;}
-.poll-option:hover{border-color:var(--accent);background:#1a1c1b;}
+.poll-option:hover:not(:disabled){border-color:var(--accent);background:#1a1c1b;}
+.poll-option:disabled{cursor:default;}
+.slide-illu{display:flex;justify-content:center;margin-bottom:22px;}
+.slide-illu svg{width:180px;height:auto;max-height:180px;}
 .poll-option .letter{width:32px;height:32px;border-radius:50%;background:#292929;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
 .poll-fill{position:absolute;left:0;top:0;bottom:0;background:rgba(158,228,147,.15);width:0;transition:width 1s ease;z-index:0;}
 .poll-label{position:relative;z-index:1;display:flex;align-items:center;gap:15px;flex:1;}
@@ -151,6 +155,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .refl-card h3 span{color:var(--accent);}
 .refl-card p{color:#999;font-size:15.5px;line-height:1.7;}
 
+.mode-menu{position:fixed;inset:0;background:var(--bg);z-index:20000;display:flex;align-items:center;justify-content:center;}
+.menu-inner{max-width:780px;width:100%;text-align:center;padding:40px;}
+.menu-cards{display:flex;gap:30px;margin-top:50px;justify-content:center;flex-wrap:wrap;}
+.menu-card{flex:1;min-width:260px;padding:46px 30px;border:1px solid var(--border);background:var(--panel);cursor:pointer;transition:.3s;text-align:center;}
+.menu-card:hover{border-color:var(--accent);transform:translateY(-4px);}
+.menu-icon{font-size:46px;margin-bottom:16px;}
+.menu-card h3{font-size:22px;margin-bottom:8px;}
+.menu-card p{color:#888;font-size:14px;line-height:1.6;}
+.login-box{margin-top:34px;}
+.login-box input{padding:14px 18px;background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:16px;width:230px;margin-right:8px;}
+.login-box button{padding:14px 24px;background:var(--accent);color:var(--bg);border:none;font-weight:700;cursor:pointer;font-size:15px;}
+.player-view{position:fixed;inset:0;background:var(--bg);z-index:15000;display:flex;align-items:center;justify-content:center;}
+.player-inner{max-width:640px;width:100%;padding:30px;}
+.player-wait{text-align:center;color:#777;padding:70px 20px;border:1px dashed #333;font-size:18px;}
+.wait-icon{font-size:46px;margin-bottom:18px;}
+
 @media (max-width:900px){
  .meth-grid,.cause-layout,.calc-box,.gev-layout,.conc-grid,.refl-grid,.verg-grid{grid-template-columns:1fr;}
  .presentation-mode .slide{padding:90px 6%;}
@@ -160,12 +180,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 </head>
 <body>
 
-<div id="presentatie" class="presentation-mode">
+<div id="presentatie" class="presentation-mode" style="display:none;">
 <button class="pres-close" onclick="stopPresentatie()">✕</button>
 
 <!-- SLIDE 1: TITEL -->
 <div class="slide active" data-slide="0">
  <div class="center">
+  <div class="slide-illu"><svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+  <path d="M95 138 L90 164 L82 176 M108 138 L112 162 L120 174" stroke="#9ee493" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <ellipse cx="100" cy="112" rx="40" ry="27" fill="#f4f4f0"/>
+  <path d="M62 104 L44 96 L60 116 Z" fill="#f4f4f0"/>
+  <path d="M68 106 Q100 82 130 106 Q100 96 68 106 Z" fill="#9ee493"/>
+  <path d="M134 98 Q158 78 152 50" stroke="#f4f4f0" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="152" cy="46" r="11" fill="#f4f4f0"/>
+  <circle cx="155" cy="43" r="2.4" fill="#080909"/>
+  <path d="M162 48 L184 56 L161 59 Z" fill="#ff6b6b"/>
+  <path d="M172 60 Q186 84 172 98 Q158 84 172 60 Z" fill="#f4f4f0" stroke="#9ee493" stroke-width="3"/>
+  <circle cx="172" cy="80" r="6" fill="#9ee493"/>
+</svg></div>
   <p class="eyebrow">PROFIELWERKSTUK · PRESENTATIE</p>
   <h1 class="giant">Fertiliteit<br><span>in Nederland</span></h1>
   <p class="subtitle">Van 2,57 naar 1,42 — en verder?</p>
@@ -182,6 +214,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
  <div class="center">
   <p class="eyebrow">EERST EVEN DIT</p>
   <h2 class="big">Een stille revolutie in <span>één getal</span></h2>
+  <div class="slide-illu"><svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:280px">
+  <line x1="20" y1="120" x2="310" y2="120" stroke="#333" stroke-width="2"/>
+  <polyline points="30,30 100,48 170,66 240,84 300,106" stroke="#9ee493" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="30" cy="30" r="6" fill="#f4f4f0"/><circle cx="100" cy="48" r="6" fill="#f4f4f0"/>
+  <circle cx="170" cy="66" r="6" fill="#f4f4f0"/><circle cx="240" cy="84" r="6" fill="#f4f4f0"/>
+  <circle cx="300" cy="106" r="7" fill="#ff6b6b"/>
+</svg></div>
   <div class="hook-nums">
    <div class="hook-num old"><div class="n">2,57</div><div class="l">1965 · KINDEREN PER VROUW</div></div>
    <div class="hook-arrow">→</div>
@@ -198,7 +237,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <p class="poll-q">Hoeveel kinderen wil JIJ krijgen?</p>
   <p class="poll-sub">Stem via Mentimeter — of klik hieronder mee 👇</p>
   <div class="poll-options" id="poll1"></div>
-  <p class="poll-note">📊 Toon live Mentimeter-resultaten in de klas</p>
+  <p class="poll-note">📊 Stem live via deze slide — iedereen ziet de uitslag direct</p>
  </div>
 </div>
 
@@ -273,7 +312,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <span class="poll-tag">LIVE POLL #2</span>
   <p class="poll-q">Wat is DÉ GROOTSTE oorzaak?</p>
   <div class="poll-options" id="poll2"></div>
-  <p class="poll-note">📊 Vergelijk de uitslag straks met onze enquête!</p>
+  <p class="poll-note">📊 Live uitslag — vergelijk straks met onze enquête!</p>
  </div>
 </div>
 
@@ -417,7 +456,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <span class="poll-tag">LIVE POLL #3</span>
   <p class="poll-q">Wat is het GROOTSTE probleem?</p>
   <div class="poll-options" id="poll3"></div>
-  <p class="poll-note">📊 Wat vinden JULLIE? — vergelijk met onze conclusie</p>
+  <p class="poll-note">📊 Live uitslag — vergelijk met onze conclusie</p>
  </div>
 </div>
 
@@ -449,6 +488,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 <!-- SLIDE 22: VRAGEN -->
 <div class="slide" data-slide="21">
  <div class="center">
+  <div class="slide-illu"><svg viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg" style="width:240px">
+  <path d="M34 78 L28 100 L54 78 Z" fill="#111312" stroke="#9ee493" stroke-width="2"/>
+  <rect x="10" y="12" width="120" height="66" rx="14" fill="#111312" stroke="#9ee493" stroke-width="2"/>
+  <circle cx="42" cy="45" r="5" fill="#9ee493"/><circle cx="70" cy="45" r="5" fill="#9ee493"/><circle cx="98" cy="45" r="5" fill="#9ee493"/>
+  <path d="M200 114 L206 130 L182 114 Z" fill="#111312" stroke="#555" stroke-width="2"/>
+  <rect x="130" y="50" width="120" height="64" rx="14" fill="#111312" stroke="#555" stroke-width="2"/>
+  <circle cx="162" cy="82" r="5" fill="#888"/><circle cx="190" cy="82" r="5" fill="#888"/><circle cx="218" cy="82" r="5" fill="#888"/>
+</svg></div>
   <h1 class="giant">Vragen?</h1>
   <p class="subtitle">We horen ze graag.</p>
   <div class="authors">
@@ -464,6 +511,45 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
  <div class="pres-progress" id="progressDots"></div>
  <button onclick="nextSlide()" id="btnNext">▶</button>
 </div>
+</div>
+
+</div>
+
+<!-- STARTSCHERM: KIES JE ROL -->
+<div id="modeMenu" class="mode-menu">
+  <div class="menu-inner">
+    <p class="eyebrow">FERTILITEIT IN NEDERLAND — LIVE</p>
+    <h1 class="giant" style="font-size:clamp(36px,5vw,64px);letter-spacing:-2px;">Kies je <span>rol</span></h1>
+    <div class="menu-cards">
+      <div class="menu-card" onclick="showPresenterLogin()">
+        <div class="menu-icon">🎤</div>
+        <h3>Presentator</h3>
+        <p>Start de volledige presentatie op het bord. Alleen toegankelijk met de presentatorcode.</p>
+      </div>
+      <div class="menu-card" onclick="showPlayerJoin()">
+        <div class="menu-icon">👥</div>
+        <h3>Deelnemer</h3>
+        <p>Stem mee op de vragen die de presentator op het bord toont. Geen code nodig.</p>
+      </div>
+    </div>
+    <div id="presenterLogin" class="login-box" style="display:none;">
+      <input type="password" id="codeInput" placeholder="Presentatorcode" onkeydown="if(event.key==='Enter')tryPresenterLogin()">
+      <button onclick="tryPresenterLogin()">Start presentatie →</button>
+      <p id="codeError" style="color:#ff6b6b;font-size:13px;margin-top:12px;"></p>
+    </div>
+    <div id="playerBox" class="login-box" style="display:none;">
+      <button onclick="joinAsPlayer()">Meedoen met de poll 👉</button>
+    </div>
+  </div>
+</div>
+
+<!-- SPELERWEERGAVE -->
+<div id="playerView" class="player-view" style="display:none;">
+  <button class="pres-close" onclick="backToMenu()">✕</button>
+  <div class="player-inner">
+    <p class="eyebrow" style="text-align:center;">FERTILITEIT IN NEDERLAND · LIVE POLL</p>
+    <div id="playerContent"></div>
+  </div>
 </div>
 
 <script>
@@ -494,11 +580,12 @@ function updateSlide() {
   if (currentSlide === 5) initChart();
   if (currentSlide === 13 || currentSlide === 15 || currentSlide === 16 || currentSlide === 17) animateBars();
   if (currentSlide === 14) calcUpdate();
+  if (sb && mode === "presenter") sb.from("session").upsert({ id: 1, slide: currentSlide });
 }
 function goTo(i){ currentSlide = Math.max(0, Math.min(totalSlides-1, i)); updateSlide(); }
 function nextSlide(){ if (currentSlide < totalSlides-1){ currentSlide++; updateSlide(); } }
 function prevSlide(){ if (currentSlide > 0){ currentSlide--; updateSlide(); } }
-function stopPresentatie(){ presContainer.style.display = "none"; document.body.style.overflow = ""; }
+function stopPresentatie(){ presContainer.style.display = "none"; document.body.style.overflow = ""; document.getElementById("modeMenu").style.display = "flex"; }
 
 document.addEventListener("keydown", e => {
   if (presContainer.style.display === "none") return;
@@ -507,37 +594,73 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") stopPresentatie();
 });
 
-/* ===== POLLEN ===== */
-function makePoll(id, options){
-  const box = document.getElementById(id);
-  const votes = new Array(options.length).fill(0);
-  const letters = ["A","B","C","D"];
+/* ===== POLLEN (LIVE VIA SUPABASE) ===== */
+// 1) Maak in Supabase een tabel (zie handleiding / SQL)
+// 2) Plak hier je gegevens: Project Settings → API
+const SUPABASE_URL = "PLAK_HIER_JE_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "PLAK_HIER_JE_ANON_KEY";
+
+const sb = SUPABASE_URL.startsWith("https")
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+const pollDefs = [
+  { el: "poll1", id: 1, q: "Hoeveel kinderen wil JIJ krijgen?", options: ["0","1","2","3 of meer"] },
+  { el: "poll2", id: 2, q: "Wat is DÉ GROOTSTE oorzaak?", options: ["Geld / huizen","Carrière","Culturele shift","Geen zin"] },
+  { el: "poll3", id: 3, q: "Wat is het GROOTSTE probleem?", options: ["Pensioenen","Vergrijzing","Arbeidsmarkt","Anders / geen probleem"] },
+];
+const pollVotes = {};
+const letters = ["A","B","C","D"];
+
+function renderAllPolls(){ pollDefs.forEach(renderPoll); }
+
+function renderPoll(p){
+  const box = document.getElementById(p.el);
+  const votes = pollVotes[p.id] || new Array(p.options.length).fill(0);
+  const total = votes.reduce((a,b)=>a+b,0);
+  const alreadyVoted = localStorage.getItem("voted_poll_" + p.id) !== null;
   box.innerHTML = "";
-  options.forEach((opt, i) => {
+  p.options.forEach((opt, i) => {
+    const pct = total ? Math.round(votes[i] / total * 100) : 0;
     const btn = document.createElement("button");
     btn.className = "poll-option";
-    btn.innerHTML = `<div class="poll-fill"></div><div class="poll-label"><span class="letter">${letters[i]}</span> ${opt}</div>`;
-    btn.onclick = () => {
-      if (box.dataset.done) return;
-      box.dataset.done = "1";
-      votes[i] = Math.floor(Math.random()*8)+10; // demo-stemmen
-      const total = votes.reduce((a,b)=>a+b,0);
-      box.querySelectorAll(".poll-option").forEach((b, j) => {
-        const pct = Math.round(votes[j]/total*100);
-        b.querySelector(".poll-fill").style.width = pct + "%";
-        const pctEl = document.createElement("span");
-        pctEl.className = "poll-pct";
-        pctEl.textContent = pct + "%";
-        b.appendChild(pctEl);
-        b.disabled = true;
-      });
+    btn.innerHTML = `<div class="poll-fill" style="width:${pct}%"></div>` +
+      `<div class="poll-label"><span class="letter">${letters[i]}</span> ${opt}</div>` +
+      (total ? `<span class="poll-pct">${pct}%</span>` : "");
+    btn.disabled = alreadyVoted || !sb;
+    btn.onclick = async () => {
+      localStorage.setItem("voted_poll_" + p.id, i);
+      renderAllPolls();
+      if (sb) await sb.rpc("vote", { p_poll: p.id, p_opt: i });
     };
     box.appendChild(btn);
   });
 }
-makePoll("poll1", ["0","1","2","3 of meer"]);
-makePoll("poll2", ["Geld / huizen","Carrière","Culturele shift","Geen zin"]);
-makePoll("poll3", ["Pensioenen","Vergrijzing","Arbeidsmarkt","Anders / geen probleem"]);
+
+async function loadAllPolls(){
+  pollDefs.forEach(p => pollVotes[p.id] = new Array(p.options.length).fill(0));
+  if (!sb) { renderAllPolls(); return; }
+  const { data } = await sb.from("poll_votes").select("*");
+  (data || []).forEach(r => {
+    if (pollVotes[r.poll_id] && r.option_idx < pollVotes[r.poll_id].length)
+      pollVotes[r.poll_id][r.option_idx] = r.votes;
+  });
+  renderAllPolls();
+}
+
+if (sb) {
+  sb.channel("live-polls")
+    .on("postgres_changes", { event: "*", schema: "public", table: "poll_votes" }, payload => {
+      const r = payload.new || payload.old;
+      if (r && pollVotes[r.poll_id] && r.option_idx < pollVotes[r.poll_id].length) {
+        pollVotes[r.poll_id][r.option_idx] = payload.eventType === "DELETE" ? 0 : r.votes;
+        renderAllPolls();
+        if (mode === "player") renderPlayer();
+      }
+    })
+    .subscribe();
+}
+loadAllPolls();
 
 /* ===== GRAFIEK ===== */
 let chartInstance = null;
@@ -606,6 +729,101 @@ function calcUpdate(){
 }
 ["sInkomen","sWoning","sCarriere"].forEach(id =>
   document.getElementById(id).addEventListener("input", calcUpdate));
+
+/* ===== MODUS: PRESENTATOR / SPELER ===== */
+const PRESENTER_CODE = "MKM2046"; // ← verander hier je code
+const POLL_SLIDES = { 2: 1, 8: 2, 18: 3 }; // slide-index → poll-id
+let mode = sessionStorage.getItem("mode");
+let currentSessionSlide = 0;
+
+function showPresenterLogin(){
+  document.getElementById("presenterLogin").style.display = "block";
+  document.getElementById("playerBox").style.display = "none";
+  document.getElementById("codeInput").focus();
+}
+function showPlayerJoin(){
+  document.getElementById("playerBox").style.display = "block";
+  document.getElementById("presenterLogin").style.display = "none";
+}
+function tryPresenterLogin(){
+  const v = document.getElementById("codeInput").value;
+  if (v === PRESENTER_CODE) startPresenter();
+  else document.getElementById("codeError").textContent = "Onjuiste code, probeer opnieuw.";
+}
+function startPresenter(){
+  mode = "presenter";
+  sessionStorage.setItem("mode", "presenter");
+  document.getElementById("modeMenu").style.display = "none";
+  presContainer.style.display = "flex";
+  document.body.style.overflow = "hidden";
+  updateSlide();
+}
+function joinAsPlayer(){
+  mode = "player";
+  sessionStorage.setItem("mode", "player");
+  document.getElementById("modeMenu").style.display = "none";
+  document.getElementById("playerView").style.display = "flex";
+  startPlayer();
+}
+function backToMenu(){
+  sessionStorage.removeItem("mode");
+  location.reload();
+}
+function startPlayer(){
+  if (!sb){
+    document.getElementById("playerContent").innerHTML =
+      '<div class="player-wait"><p>Live-modus is nog niet geconfigureerd.<br>De presentator moet eerst de Supabase-codes invullen.</p></div>';
+    return;
+  }
+  sb.from("session").select("slide").eq("id", 1).single().then(({ data }) => {
+    if (data) currentSessionSlide = data.slide;
+    renderPlayer();
+  });
+  sb.channel("player-session")
+    .on("postgres_changes", { event: "*", schema: "public", table: "session" }, payload => {
+      if (payload.new){ currentSessionSlide = payload.new.slide; renderPlayer(); }
+    })
+    .subscribe();
+}
+function renderPlayer(){
+  const c = document.getElementById("playerContent");
+  if (!c) return;
+  const pollId = POLL_SLIDES[currentSessionSlide];
+  if (!pollId){
+    c.innerHTML = '<div class="player-wait"><div class="wait-icon">⏳</div><p>Wachten op de volgende vraag…</p></div>';
+    return;
+  }
+  const p = pollDefs.find(x => x.id === pollId);
+  const votes = pollVotes[p.id] || new Array(p.options.length).fill(0);
+  const total = votes.reduce((a,b)=>a+b,0);
+  const votedIdx = localStorage.getItem("voted_poll_" + p.id);
+  const show = votedIdx !== null;
+  let html = '<p class="poll-q" style="text-align:center;margin-bottom:34px;">' + p.q + '</p><div class="poll-options">';
+  p.options.forEach((opt, i) => {
+    const pct = total ? Math.round(votes[i]/total*100) : 0;
+    html += '<button class="poll-option" data-i="' + i + '"' + (show ? " disabled" : "") + '>' +
+      (show ? '<div class="poll-fill" style="width:' + pct + '%"></div>' : '') +
+      '<div class="poll-label"><span class="letter">' + letters[i] + '</span> ' + opt + '</div>' +
+      (show ? '<span class="poll-pct">' + pct + '%</span>' : '') +
+      '</button>';
+  });
+  html += '</div>';
+  if (show) html += '<p style="text-align:center;color:var(--accent);margin-top:26px;">✓ Stem ontvangen — kijk mee naar de uitslag!</p>';
+  c.innerHTML = html;
+  if (!show){
+    c.querySelectorAll(".poll-option").forEach(btn => {
+      btn.onclick = async () => {
+        localStorage.setItem("voted_poll_" + p.id, btn.dataset.i);
+        renderPlayer();
+        if (sb) await sb.rpc("vote", { p_poll: p.id, p_opt: +btn.dataset.i });
+      };
+    });
+  }
+}
+
+// Herstel modus bij verversen
+if (mode === "presenter") startPresenter();
+else if (mode === "player") joinAsPlayer();
 
 updateSlide();
 </script>
